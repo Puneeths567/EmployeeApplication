@@ -2,6 +2,7 @@ package com.directory.EmployeeApplication.controller;
 
 import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.model.SalaryDTO;
+import com.directory.EmployeeApplication.service.EmployeeService;
 import com.directory.EmployeeApplication.service.SalaryService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class SalaryController {
 
     @Autowired
     private SalaryService salaryService;
+
+
 
     @PostMapping("/add/{id}")
     public ResponseEntity<Long> addSalary(@RequestBody SalaryDTO salaryDTO,@PathVariable Long id){
@@ -41,6 +44,19 @@ public class SalaryController {
         return  new ResponseEntity<>(salaryDTOList, HttpStatus.OK);
 
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<SalaryDTO> updateSalary(@RequestBody SalaryDTO salaryDTO,@PathVariable("id") Long id){
+
+        log.info(" Updating Salary Details of employee with id : {}",id);
+        SalaryDTO salary = salaryService.updateSalary(salaryDTO,id);
+
+        log.info("Salary Details are updated  for EmployeeId : {} ",id );
+        return new ResponseEntity<>(salary, HttpStatus.OK);
+
+    }
+
+
 
 
 }

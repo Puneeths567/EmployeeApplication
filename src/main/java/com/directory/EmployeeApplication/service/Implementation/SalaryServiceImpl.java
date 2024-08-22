@@ -7,6 +7,8 @@ import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.repository.SalaryRepository;
 import com.directory.EmployeeApplication.service.SalaryService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class SalaryServiceImpl implements SalaryService {
 
+    private static final Logger log = LoggerFactory.getLogger(SalaryServiceImpl.class);
     @Autowired
     private SalaryRepository salaryRepository;
 
@@ -30,42 +33,18 @@ public class SalaryServiceImpl implements SalaryService {
 
     @Override
     public List<SalaryDTO> getAllSalaries() {
+
         List<Salary>  salaryList = salaryRepository.findAll();
+
+        log.info("Getting  the salaries of the all employees");
+
         return salaryList.stream().map(e->modelMapper.map(e,SalaryDTO.class)).collect(Collectors.toList());
     }
-
-//    @Override
-//    public Long addSalary(SalaryDTO salaryDTO, Long id) {
-//
-//
-//        Long employeeId = salaryDTO.getEmployeeId();
-//
-//        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
-//
-//        if (employeeOptional.isPresent()) {
-//            Employee employee = employeeOptional.get();
-//            // Set the employee in the salary entity
-//            salaryDTO.setEmployee(employee);
-//            // Save the salary entity, which now has a valid employee reference
-//            return salaryRepository.save(salary);
-//        } else {
-//            throw new RuntimeException("Employee with id " + employeeId + " not found.");
-//        }
-//    }
-//
-//        Salary salary = modelMapper.map(salaryDTO,Salary.class);
-//        Salary saved = salaryRepository.save(salary);
-//
-//        return saved.getId();
-//    }
 
     @Override
     public Long addSalary(SalaryDTO salaryDTO, Long id) {
 
-        // Fetch the Employee using the provided employeeId from the SalaryDTO
-        Long employeeId = salaryDTO.getEmployeeId();
-
-        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+        Optional<Employee> employeeOptional = employeeRepository.findById(id);
 
         if (employeeOptional.isPresent()) {
             Employee employee = employeeOptional.get();
@@ -79,12 +58,43 @@ public class SalaryServiceImpl implements SalaryService {
             // Save the salary entity, which now has a valid employee reference
             Salary saved = salaryRepository.save(salary);
 
+            log.info("Salary Details have been Successfully added to database");
+
             // Return the ID of the saved salary
             return saved.getId();
+
         } else {
             // If the employee is not found, throw an exception
-            throw new RuntimeException("Employee with id " + employeeId + " not found.");
+         throw new RuntimeException("Employee with id " + id + " not found.");
         }
+    }
+
+    @Override
+    public SalaryDTO updateSalary(SalaryDTO salaryDTO, Long id) {
+
+          Optional<Salary> emp_id = salaryRepository.findById(id);
+
+          if(emp_id.isPresent()){
+              Salary e  = emp_id.get();
+
+              Salary sal = modelMapper.map(salaryDTO,Salary.class);
+              e.setSalary(sal.getSalary());
+
+              Salary salary = salaryRepository.save(e);
+
+              SalaryDTO salaryDTO1 = modelMapper.map(salary,SalaryDTO.class);
+
+              return salaryDTO1;
+
+
+          }
+          else {
+              // If the employee is not found, throw an exception
+              throw new RuntimeException("Employee with id " + id + " not found.");
+          }
+
+
+
     }
 
 }

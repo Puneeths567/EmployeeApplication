@@ -8,4 +8,6 @@ public interface SalaryService {
     List<SalaryDTO> getAllSalaries();
 
     Long addSalary(SalaryDTO salaryDTO,Long id);
+
+    SalaryDTO updateSalary(SalaryDTO salaryDTO, Long id);
 }

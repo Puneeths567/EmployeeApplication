@@ -1,19 +1,16 @@
 package com.directory.EmployeeApplication.service.Implementation;
 
-import com.directory.EmployeeApplication.entity.Department;
 import com.directory.EmployeeApplication.entity.Employee;
+import com.directory.EmployeeApplication.exception.CustomException;
 import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.service.EmployeeService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.TypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,50 +45,44 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         log.info("Employee Details received from database");
 
-        List<EmployeeDTO> employee = employeeList.stream()
+        return employeeList.stream()
                 .map(e -> modelMapper.map(e, EmployeeDTO.class))
                 .collect(Collectors.toList());
-
-
-//        for(Employee e : employeeList){
-//            EmployeeDTO employeeDTO = modelMapper.map(e,EmployeeDTO.class);
-//
-//                    employee.add(employeeDTO);
-//        }
-
-        return employee;
 
     }
 
     @Override
     public String deleteEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(()-> new CustomException("Invalid Employee For Delete :"+id,"NOT_FOUND",404));
         employeeRepository.deleteById(id);
         log.info("Successfully deleted the employee Details");
-        return "Sucessfully Deleted";
+        return "Successfully Deleted";
     }
 
     @Override
     public EmployeeDTO getEmployee(Long id) {
 
-        Optional<Employee> employee=employeeRepository.findById(id);
+        Employee employee=employeeRepository.findById(id)
+                .orElseThrow(()-> new CustomException("Employee is not found with Employee id :"+id,"NOT_FOUND",404));
 
-        EmployeeDTO emp = modelMapper.map(employee,EmployeeDTO.class);
-
-        return emp;
+        return modelMapper.map(employee,EmployeeDTO.class);
     }
 
     @Override
     public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO, Long id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        Employee emp = null;
-        if(employee.isPresent()){
-             emp = employee.get();
-           Employee e = modelMapper.map(employeeDTO,Employee.class);
-           emp.setEmployeeName(e.getEmployeeName());
-           emp.setDepartment(e.getDepartment());
-           employeeRepository.save(emp);
-        }
-        EmployeeDTO dto = modelMapper.map(emp,EmployeeDTO.class);
-        return dto;
+
+
+        Employee employee = employeeRepository.findById(id).orElseThrow(()-> new CustomException("Invalid Employee For Update :"+id,"NOT_FOUND",404));
+        log.info("Fetched the employee details from the database and updating :{}",employee);
+
+
+        //Mapping DTO to Entity
+        Employee e = modelMapper.map(employeeDTO,Employee.class);
+
+        employee.setEmployeeName(e.getEmployeeName());
+        employee.setDepartment(e.getDepartment());
+        employeeRepository.save(employee);
+
+        return modelMapper.map(employee,EmployeeDTO.class);
     }
 }
