@@ -7,6 +7,7 @@ import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.repository.DepartmentRepository;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.service.EmployeeService;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -39,9 +40,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("Adding new Employee Request : {}",employeeDTO);
 
         Employee emp = modelMapper.map(employeeDTO,Employee.class);
-
-
-
         try {
             employeeRepository.save(emp);
 
@@ -52,7 +50,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             // Throw custom exception
             throw new CustomException("Database error occurred while saving Employee. Please try again later.","DATABASE_ERROR",500);
         }
-
 
         return emp.getEmployeeId();
 

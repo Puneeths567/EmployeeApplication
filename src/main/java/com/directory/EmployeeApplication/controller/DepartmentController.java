@@ -34,7 +34,7 @@ public class DepartmentController {
         log.info(" Fetching All Department ");
         List<DepartmentDTO> allDepartments = departmentService.getAllDepartments();
 
-        log.info("Employee Data is Fetched " );
+        log.info("All Departments are Fetched " );
         return  new ResponseEntity<>(allDepartments, HttpStatus.OK);
 
     }
