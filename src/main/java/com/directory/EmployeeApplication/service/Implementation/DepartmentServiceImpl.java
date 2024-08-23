@@ -1,19 +1,18 @@
 package com.directory.EmployeeApplication.service.Implementation;
 
 import com.directory.EmployeeApplication.entity.Department;
-import com.directory.EmployeeApplication.entity.Employee;
+import com.directory.EmployeeApplication.exception.CustomException;
 import com.directory.EmployeeApplication.model.DepartmentDTO;
-import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.repository.DepartmentRepository;
 import com.directory.EmployeeApplication.service.DepartmentService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,9 +48,19 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public String deleteByDepartment(Long id) {
-        log.info(" Deleting Department details ");
-        departmentRepository.deleteById(id);
+    public String deleteByDepartment(Long id)  {
+        Department dept = departmentRepository.findById(id).orElseThrow(()->new CustomException("Department is not Found with id : "+id,"NOT_FOUND",404));
+
+        try {
+            departmentRepository.deleteById(dept.getDepartmentId());
+            log.info("Deleting Department details");
+        } catch (DataIntegrityViolationException ex) {
+            // Log the exception details if needed
+            log.error("Data integrity violation while deleting department with id: " + id, ex);
+
+            // Throw custom exception
+            throw new CustomException("Cannot delete  the department because it is referenced by employees","Data integrity violation",409);
+        }
 
         return "Successfully Deleted";
     }

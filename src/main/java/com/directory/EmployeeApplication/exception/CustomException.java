@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomException extends RuntimeException{
+public class CustomException extends RuntimeException {
 
     private String errorCode;
     private int status;

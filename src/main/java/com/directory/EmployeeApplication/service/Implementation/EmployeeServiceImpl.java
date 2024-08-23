@@ -1,8 +1,10 @@
 package com.directory.EmployeeApplication.service.Implementation;
 
+import com.directory.EmployeeApplication.entity.Department;
 import com.directory.EmployeeApplication.entity.Employee;
 import com.directory.EmployeeApplication.exception.CustomException;
 import com.directory.EmployeeApplication.model.EmployeeDTO;
+import com.directory.EmployeeApplication.repository.DepartmentRepository;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.service.EmployeeService;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +21,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -73,6 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
         Employee employee = employeeRepository.findById(id).orElseThrow(()-> new CustomException("Invalid Employee For Update :"+id,"NOT_FOUND",404));
+        Department department = departmentRepository.findById(employeeDTO.getDepartment().getDepartmentId()).orElseThrow(()-> new CustomException("Invalid Department ID:"+id,"NOT_FOUND",404));
         log.info("Fetched the employee details from the database and updating :{}",employee);
 
 

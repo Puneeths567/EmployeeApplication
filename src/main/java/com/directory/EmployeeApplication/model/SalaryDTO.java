@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SalaryDTO {
 
-    private Long employeeId;
     private Long salary;
 }

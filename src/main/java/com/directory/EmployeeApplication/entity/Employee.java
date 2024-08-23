@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "department")
 public class Employee {
 
     @Id
@@ -18,7 +19,7 @@ public class Employee {
     @Column(name = "EMPLOYEE_NAME", nullable = false)
     private String employeeName;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "DEPARTMENT_ID", nullable = false)
     private Department department;
 

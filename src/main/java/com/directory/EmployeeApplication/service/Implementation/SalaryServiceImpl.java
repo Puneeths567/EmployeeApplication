@@ -2,6 +2,7 @@ package com.directory.EmployeeApplication.service.Implementation;
 
 import com.directory.EmployeeApplication.entity.Employee;
 import com.directory.EmployeeApplication.entity.Salary;
+import com.directory.EmployeeApplication.exception.CustomException;
 import com.directory.EmployeeApplication.model.SalaryDTO;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.repository.SalaryRepository;
@@ -64,8 +65,8 @@ public class SalaryServiceImpl implements SalaryService {
             return saved.getId();
 
         } else {
-            // If the employee is not found, throw an exception
-         throw new RuntimeException("Employee with id " + id + " not found.");
+            //If the employee is not found, throw an exception
+         throw new CustomException("Employee is not found with Employee id :"+id,"NOT_FOUND",404);
         }
     }
 
@@ -83,6 +84,7 @@ public class SalaryServiceImpl implements SalaryService {
               Salary salary = salaryRepository.save(e);
 
               SalaryDTO salaryDTO1 = modelMapper.map(salary,SalaryDTO.class);
+              log.info("Salary Details have been Successfully updated");
 
               return salaryDTO1;
 
@@ -90,7 +92,7 @@ public class SalaryServiceImpl implements SalaryService {
           }
           else {
               // If the employee is not found, throw an exception
-              throw new RuntimeException("Employee with id " + id + " not found.");
+              throw new CustomException("Employee is not found with Employee id :"+id,"NOT_FOUND",404);
           }
 
 

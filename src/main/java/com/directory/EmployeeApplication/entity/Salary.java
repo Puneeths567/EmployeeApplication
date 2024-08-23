@@ -20,6 +20,6 @@ public class Salary {
 
     @OneToOne
     @MapsId // Use the Employee's ID as the ID for Salary
-    @JoinColumn(name = "EMP_ID")
+    @JoinColumn(name = "EMP_ID",referencedColumnName = "id")
     private Employee employee;
 }

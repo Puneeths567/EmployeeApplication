@@ -5,7 +5,7 @@ import com.directory.EmployeeApplication.model.EmployeeDTO;
 
 import java.util.List;
 
-public interface DepartmentService {
+public interface DepartmentService  {
     Long addDepartment(DepartmentDTO departmentDTO);
 
     List<DepartmentDTO> getAllDepartments();
