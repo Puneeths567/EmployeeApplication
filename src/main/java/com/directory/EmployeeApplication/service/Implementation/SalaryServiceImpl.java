@@ -57,12 +57,20 @@ public class SalaryServiceImpl implements SalaryService {
             salary.setEmployee(employee);
 
             // Save the salary entity, which now has a valid employee reference
-            Salary saved = salaryRepository.save(salary);
+            try {
+                 salaryRepository.save(salary);
 
-            log.info("Salary Details have been Successfully added to database");
+            } catch (RuntimeException ex) {
+                // Log the exception details if needed
+                log.error("failed to save the Salary details " , ex);
+
+                // Throw custom exception
+                throw new CustomException("Database error occurred while saving Salary details. Please try again later.","DATABASE_ERROR",500);
+            }
+
 
             // Return the ID of the saved salary
-            return saved.getId();
+            return salary.getId();
 
         } else {
             //If the employee is not found, throw an exception
@@ -73,20 +81,31 @@ public class SalaryServiceImpl implements SalaryService {
     @Override
     public SalaryDTO updateSalary(SalaryDTO salaryDTO, Long id) {
 
-          Optional<Salary> emp_id = salaryRepository.findById(id);
+          Optional<Salary> salaryId = salaryRepository.findById(id);
 
-          if(emp_id.isPresent()){
-              Salary e  = emp_id.get();
+          if(salaryId.isPresent()){
+              Salary e  = salaryId.get();
 
               Salary sal = modelMapper.map(salaryDTO,Salary.class);
               e.setSalary(sal.getSalary());
 
-              Salary salary = salaryRepository.save(e);
 
-              SalaryDTO salaryDTO1 = modelMapper.map(salary,SalaryDTO.class);
+              try {
+                  salaryRepository.save(e);
+
+              } catch (RuntimeException ex) {
+                  // Log the exception details if needed
+                  log.error("failed to updating the Salary details " , ex);
+
+                  // Throw custom exception
+                  throw new CustomException("Database error occurred while saving Salary details. Please try again later.","DATABASE_ERROR",500);
+              }
+
+
+
               log.info("Salary Details have been Successfully updated");
 
-              return salaryDTO1;
+              return salaryDTO;
 
 
           }

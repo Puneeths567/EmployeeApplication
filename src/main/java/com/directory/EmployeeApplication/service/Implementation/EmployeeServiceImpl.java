@@ -10,6 +10,7 @@ import com.directory.EmployeeApplication.service.EmployeeService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,8 +39,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee emp = modelMapper.map(employeeDTO,Employee.class);
 
-        Employee employee = employeeRepository.save(emp);
-        return employee.getEmployeeId();
+
+
+        try {
+            employeeRepository.save(emp);
+
+        } catch (RuntimeException ex) {
+            // Log the exception details if needed
+            log.error("failed to save the employee details " , ex);
+
+            // Throw custom exception
+            throw new CustomException("Database error occurred while saving Employee. Please try again later.","DATABASE_ERROR",500);
+        }
+
+
+        return emp.getEmployeeId();
 
     }
 

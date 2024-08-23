@@ -33,10 +33,18 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .departmentId(departmentDTO.getDepartmentId())
                 .departmentName(departmentDTO.getDepartmentName())
                 .build();
+        try {
+            departmentRepository.save(department);
 
-         Department dept = departmentRepository.save(department);
+        } catch (RuntimeException ex) {
+            // Log the exception details if needed
+            log.error("failed to save the Department details " , ex);
 
-        return dept.getDepartmentId();
+            // Throw custom exception
+            throw new CustomException("Database error occurred while saving Department. Please try again later.","DATABASE_ERROR",500);
+        }
+
+        return department.getDepartmentId();
     }
 
     @Override
@@ -67,15 +75,20 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDTO updateDepartment(DepartmentDTO departmentDTO, Long id) {
-        Optional<Department> department = departmentRepository.findById(id);
-        Department dpt = null;
-        if(department.isPresent()){
-            dpt = department.get();
-            Department e = modelMapper.map(departmentDTO,Department.class);
-            dpt.setDepartmentName(e.getDepartmentName());
-            departmentRepository.save(dpt);
+        Department department = departmentRepository.findById(id).orElseThrow(()->new CustomException("Department is not Found with id : "+id,"NOT_FOUND",404));
+
+        Department e = modelMapper.map(departmentDTO,Department.class);
+        e.setDepartmentName(e.getDepartmentName());
+        try {
+            departmentRepository.save(e);
+        }catch (RuntimeException ex){
+            // Log the exception details if needed
+            log.error("Failed to update the deatils of the department: " , ex);
+
+            // Throw custom exception
+            throw new CustomException("Database error occurred while updating department. Please try again later.","DATABASE_ERROR",500);
         }
-        return modelMapper.map(dpt,DepartmentDTO.class);
+        return modelMapper.map(e,DepartmentDTO.class);
 
     }
 }
