@@ -3,7 +3,7 @@ package com.directory.EmployeeApplication.controller;
 import com.directory.EmployeeApplication.entity.Employee;
 import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.service.EmployeeService;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
-@Log4j2
+@Slf4j
 public class EmployeeController {
 
     @Autowired
@@ -37,6 +37,7 @@ public class EmployeeController {
 
         log.info("All Employees Data is Fetched " );
         return  new ResponseEntity<>(allEmployees, HttpStatus.OK);
+
 
     }
 
@@ -68,7 +69,6 @@ public class EmployeeController {
 
         log.info(" Deleting Employee details of id : {} ",id);
         String deletedEmployee = employeeService.deleteEmployee(id);
-
         log.info("Employee data is deleted " );
         return  new ResponseEntity<>(deletedEmployee, HttpStatus.OK);
 

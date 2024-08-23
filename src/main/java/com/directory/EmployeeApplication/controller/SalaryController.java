@@ -5,6 +5,7 @@ import com.directory.EmployeeApplication.model.SalaryDTO;
 import com.directory.EmployeeApplication.service.EmployeeService;
 import com.directory.EmployeeApplication.service.SalaryService;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/salary")
-@Log4j2
+@Slf4j
 public class SalaryController {
 
     @Autowired

@@ -6,6 +6,7 @@ import com.directory.EmployeeApplication.model.DepartmentDTO;
 import com.directory.EmployeeApplication.repository.DepartmentRepository;
 import com.directory.EmployeeApplication.service.DepartmentService;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Log4j2
+@Slf4j
 public class DepartmentServiceImpl implements DepartmentService {
 
     @Autowired
@@ -83,7 +84,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             departmentRepository.save(e);
         }catch (RuntimeException ex){
             // Log the exception details if needed
-            log.error("Failed to update the deatils of the department: " , ex);
+            log.error("Failed to update the details of the department: " , ex);
 
             // Throw custom exception
             throw new CustomException("Database error occurred while updating department. Please try again later.","DATABASE_ERROR",500);

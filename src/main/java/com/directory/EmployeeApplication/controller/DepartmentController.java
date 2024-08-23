@@ -4,6 +4,7 @@ import com.directory.EmployeeApplication.model.DepartmentDTO;
 import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.service.DepartmentService;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @RestController
 @RequestMapping("/department")
-@Log4j2
+@Slf4j
 public class DepartmentController {
 
     @Autowired
@@ -45,6 +46,7 @@ public class DepartmentController {
         String deletedDepartment = departmentService.deleteByDepartment(id);
 
         log.info("Department is deleted " );
+        log.error("Deleted");
         return  new ResponseEntity<>(deletedDepartment, HttpStatus.OK);
     }
 

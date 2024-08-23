@@ -8,6 +8,7 @@ import com.directory.EmployeeApplication.repository.DepartmentRepository;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.service.EmployeeService;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Log4j2
+@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired

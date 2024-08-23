@@ -7,6 +7,7 @@ import com.directory.EmployeeApplication.model.SalaryDTO;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
 import com.directory.EmployeeApplication.repository.SalaryRepository;
 import com.directory.EmployeeApplication.service.SalaryService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class SalaryServiceImpl implements SalaryService {
 
-    private static final Logger log = LoggerFactory.getLogger(SalaryServiceImpl.class);
+
     @Autowired
     private SalaryRepository salaryRepository;
 
