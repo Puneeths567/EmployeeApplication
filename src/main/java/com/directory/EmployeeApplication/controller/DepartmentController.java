@@ -1,16 +1,16 @@
 package com.directory.EmployeeApplication.controller;
 
 import com.directory.EmployeeApplication.model.DepartmentDTO;
-import com.directory.EmployeeApplication.model.EmployeeDTO;
 import com.directory.EmployeeApplication.service.DepartmentService;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hibernate.query.sqm.tree.SqmNode.log;
 
@@ -40,14 +40,17 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteByDepartment(@PathVariable Long id){
+    public ResponseEntity<Map<String, String>> deleteByDepartment(@PathVariable Long id){
 
         log.info(" Deleting Department details of id : {} ",id);
         String deletedDepartment = departmentService.deleteByDepartment(id);
 
         log.info("Department is deleted " );
         log.error("Deleted");
-        return  new ResponseEntity<>(deletedDepartment, HttpStatus.OK);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Successfully Deleted");
+
+        return  new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")

@@ -23,6 +23,7 @@ public class Employee {
     @JoinColumn(name = "DEPARTMENT_ID", nullable = false)
     private Department department;
 
-    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "employee", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Salary salary;
 }

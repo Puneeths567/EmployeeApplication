@@ -7,7 +7,7 @@ import java.util.List;
 public interface SalaryService {
     List<SalaryDTO> getAllSalaries();
 
-    Long addSalary(SalaryDTO salaryDTO,Long id);
+    Long addSalary(SalaryDTO salaryDTO);
 
     SalaryDTO updateSalary(SalaryDTO salaryDTO, Long id);
 }

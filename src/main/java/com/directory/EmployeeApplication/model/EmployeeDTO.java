@@ -2,6 +2,7 @@ package com.directory.EmployeeApplication.model;
 
 import com.directory.EmployeeApplication.entity.Department;
 import com.directory.EmployeeApplication.entity.Employee;
+import com.directory.EmployeeApplication.entity.Salary;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,6 +25,7 @@ public class EmployeeDTO {
     private Long employeeId;
     private String employeeName;
     private DepartmentDTO department;
+    private SalaryDTO salary;
 
 
 

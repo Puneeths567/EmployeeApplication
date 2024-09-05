@@ -4,8 +4,10 @@ import com.directory.EmployeeApplication.entity.Department;
 import com.directory.EmployeeApplication.entity.Employee;
 import com.directory.EmployeeApplication.exception.CustomException;
 import com.directory.EmployeeApplication.model.EmployeeDTO;
+import com.directory.EmployeeApplication.model.SalaryDTO;
 import com.directory.EmployeeApplication.repository.DepartmentRepository;
 import com.directory.EmployeeApplication.repository.EmployeeRepository;
+import com.directory.EmployeeApplication.repository.SalaryRepository;
 import com.directory.EmployeeApplication.service.EmployeeService;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
@@ -14,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +35,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private ModelMapper modelMapper;
 
 
+    @Autowired
+    private SalaryRepository salaryRepository;
+
 
 
     @Override
@@ -41,14 +47,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee emp = modelMapper.map(employeeDTO,Employee.class);
         try {
-            employeeRepository.save(emp);
+            if (emp.getSalary() != null) {
+                emp.getSalary().setEmployee(emp);  // Link the salary to the employee
+            }
+                employeeRepository.save(emp);
+
 
         } catch (RuntimeException ex) {
             // Log the exception details if needed
             log.error("failed to save the employee details " , ex);
 
             // Throw custom exception
-            throw new CustomException("Database error occurred while saving Employee. Please try again later.","DATABASE_ERROR",500);
+            throw new CustomException("Failed to save the Employee Details. Please try again later.","DATABASE_ERROR",500);
         }
 
         return emp.getEmployeeId();
@@ -99,6 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setEmployeeName(e.getEmployeeName());
         employee.setDepartment(e.getDepartment());
+        employee.getSalary().setSalary(employeeDTO.getSalary().getSalary());
         employeeRepository.save(employee);
 
         return modelMapper.map(employee,EmployeeDTO.class);

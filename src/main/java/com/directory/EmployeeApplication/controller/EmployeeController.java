@@ -8,27 +8,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employee")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
+
+
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping("/add")
-    public ResponseEntity<Long> addEmployee(@RequestBody EmployeeDTO employeeDTO){
+    public ResponseEntity<Map<String, String>> addEmployee(@RequestBody EmployeeDTO employeeDTO){
 
         log.info(" Receiving Employee Details");
         Long id = employeeService.addEmployee(employeeDTO);
 
         log.info("Employee is created with EmployeeId : {} ",id );
-        return new ResponseEntity<>(id, HttpStatus.OK);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Successfully Added");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
+
     @GetMapping("/getAll")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees(){
 
@@ -65,12 +76,15 @@ public class EmployeeController {
 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable Long id){
+    public ResponseEntity<Map<String, String>> deleteEmployee(@PathVariable Long id){
 
         log.info(" Deleting Employee details of id : {} ",id);
         String deletedEmployee = employeeService.deleteEmployee(id);
         log.info("Employee data is deleted " );
-        return  new ResponseEntity<>(deletedEmployee, HttpStatus.OK);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Successfully Deleted");
+        return  new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 

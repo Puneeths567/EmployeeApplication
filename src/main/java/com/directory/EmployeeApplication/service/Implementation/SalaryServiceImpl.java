@@ -45,9 +45,9 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
-    public Long addSalary(SalaryDTO salaryDTO, Long id) {
+    public Long addSalary(SalaryDTO salaryDTO) {
 
-        Optional<Employee> employeeOptional = employeeRepository.findById(id);
+        Optional<Employee> employeeOptional = employeeRepository.findById(salaryDTO.getId());
 
         if (employeeOptional.isPresent()) {
             Employee employee = employeeOptional.get();
@@ -57,6 +57,7 @@ public class SalaryServiceImpl implements SalaryService {
 
             // Set the employee in the salary entity
             salary.setEmployee(employee);
+            employee.setSalary(salary);
 
             // Save the salary entity, which now has a valid employee reference
             try {
@@ -72,11 +73,11 @@ public class SalaryServiceImpl implements SalaryService {
 
 
             // Return the ID of the saved salary
-            return salary.getId();
+            return salary.getSalary();
 
         } else {
             //If the employee is not found, throw an exception
-         throw new CustomException("Employee is not found with Employee id :"+id,"NOT_FOUND",404);
+         throw new CustomException("Employee is not found with Employee id :"+salaryDTO.getId(),"NOT_FOUND",404);
         }
     }
 

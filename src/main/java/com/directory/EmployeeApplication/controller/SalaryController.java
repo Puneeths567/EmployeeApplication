@@ -23,13 +23,14 @@ public class SalaryController {
 
 
 
-    @PostMapping("/add/{id}")
-    public ResponseEntity<Long> addSalary(@RequestBody SalaryDTO salaryDTO,@PathVariable Long id){
+    @PostMapping("/add")
+    public ResponseEntity<Long> addSalary(@RequestBody SalaryDTO salaryDTO){
+
 
         log.info(" Adding Salary Details ");
-        Long Empid = salaryService.addSalary(salaryDTO,id);
+        Long id = salaryService.addSalary(salaryDTO);
 
-        log.info("Employee is created with EmployeeId : {} ",id );
+        log.info("Employee is created with EmployeeId : {} ",salaryDTO.getId() );
         return new ResponseEntity<>(id, HttpStatus.OK);
 
     }
